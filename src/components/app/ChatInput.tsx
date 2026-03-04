@@ -43,14 +43,18 @@ export function ChatInput({ queryId, projectId }: ChatInputProps) {
     images.forEach((img, i) => formData.set(`image_${i}`, img.file));
 
     startTransition(async () => {
-      const result = await sendMessage(queryId, projectId, formData);
-      if (result?.error) {
-        setError(result.error);
-      } else {
-        setContent("");
-        images.forEach((img) => URL.revokeObjectURL(img.url));
-        setImages([]);
-        setError(null);
+      try {
+        const result = await sendMessage(queryId, projectId, formData);
+        if (result?.error) {
+          setError(result.error);
+        } else {
+          setContent("");
+          images.forEach((img) => URL.revokeObjectURL(img.url));
+          setImages([]);
+          setError(null);
+        }
+      } catch {
+        setError("Błąd wysyłania — sprawdź rozmiar pliku (max 5MB łącznie)");
       }
     });
   }

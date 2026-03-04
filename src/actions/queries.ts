@@ -43,6 +43,24 @@ export async function createQuery(projectId: string, formData: FormData) {
 
 export async function updateQuery(queryId: string, projectId: string, formData: FormData) {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const imagesToKeep = JSON.parse((formData.get("images_to_keep") as string) || "[]") as string[];
+  const newPaths: string[] = [];
+  let i = 0;
+  while (true) {
+    const imageFile = formData.get(`image_${i}`) as File | null;
+    if (!imageFile || imageFile.size === 0) break;
+    const ext = imageFile.name.split(".").pop();
+    const filename = `${user.id}/${Date.now()}_${i}.${ext}`;
+    const { error: uploadError } = await supabase.storage
+      .from("query-images")
+      .upload(filename, imageFile);
+    if (uploadError) return { error: uploadError.message };
+    newPaths.push(filename);
+    i++;
+  }
 
   const visibility = (formData.get("visibility") as string) || "all";
   const { error } = await supabase
@@ -51,6 +69,7 @@ export async function updateQuery(queryId: string, projectId: string, formData: 
       name: formData.get("name") as string,
       description: (formData.get("description") as string) || null,
       visibility,
+      image_paths: [...imagesToKeep, ...newPaths],
     })
     .eq("id", queryId);
 

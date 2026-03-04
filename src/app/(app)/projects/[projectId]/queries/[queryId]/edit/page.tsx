@@ -39,6 +39,7 @@ export default async function EditQueryPage({ params }: Props) {
         defaultName={query.name}
         defaultDescription={query.description}
         defaultVisibility={query.visibility ?? "all"}
+        defaultImagePaths={query.image_paths ?? []}
         isAdmin={isAdmin}
       />
     </div>
