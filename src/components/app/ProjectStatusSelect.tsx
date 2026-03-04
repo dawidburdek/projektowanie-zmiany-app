@@ -15,6 +15,7 @@ export function ProjectStatusSelect({ projectId, currentStatus }: Props) {
 
   return (
     <Select
+      containerClassName="w-fit"
       defaultValue={currentStatus}
       onChange={(e) => {
         const status = e.target.value as ProjectStatus;

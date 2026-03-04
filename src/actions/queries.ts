@@ -10,25 +10,26 @@ export async function createQuery(projectId: string, formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  let imagePath: string | null = null;
-  const imageFile = formData.get("image") as File | null;
-
-  if (imageFile && imageFile.size > 0) {
+  const imagePaths: string[] = [];
+  let i = 0;
+  while (true) {
+    const imageFile = formData.get(`image_${i}`) as File | null;
+    if (!imageFile || imageFile.size === 0) break;
     const ext = imageFile.name.split(".").pop();
-    const filename = `${user.id}/${Date.now()}.${ext}`;
+    const filename = `${user.id}/${Date.now()}_${i}.${ext}`;
     const { error: uploadError } = await supabase.storage
       .from("query-images")
       .upload(filename, imageFile);
-
     if (uploadError) return { error: uploadError.message };
-    imagePath = filename;
+    imagePaths.push(filename);
+    i++;
   }
 
   const { error } = await supabase.from("queries").insert({
     project_id: projectId,
     name: formData.get("name") as string,
     description: (formData.get("description") as string) || null,
-    image_path: imagePath,
+    image_paths: imagePaths,
     created_by: user.id,
   });
 
@@ -100,29 +101,30 @@ export async function sendMessage(queryId: string, projectId: string, formData: 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  let imagePath: string | null = null;
-  const imageFile = formData.get("image") as File | null;
-
-  if (imageFile && imageFile.size > 0) {
+  const imagePaths: string[] = [];
+  let i = 0;
+  while (true) {
+    const imageFile = formData.get(`image_${i}`) as File | null;
+    if (!imageFile || imageFile.size === 0) break;
     const ext = imageFile.name.split(".").pop();
-    const filename = `${user.id}/${Date.now()}.${ext}`;
+    const filename = `${user.id}/${Date.now()}_${i}.${ext}`;
     const { error: uploadError } = await supabase.storage
       .from("chat-images")
       .upload(filename, imageFile);
-
     if (uploadError) return { error: uploadError.message };
-    imagePath = filename;
+    imagePaths.push(filename);
+    i++;
   }
 
   const content = (formData.get("content") as string) || null;
-  if (!content && !imagePath) return { error: "Wiadomość nie może być pusta" };
+  if (!content && imagePaths.length === 0) return { error: "Wiadomość nie może być pusta" };
 
   const { error } = await supabase.from("messages").insert({
     query_id: queryId,
     user_id: user.id,
     user_email: user.email!,
     content,
-    image_path: imagePath,
+    image_paths: imagePaths,
   });
 
   if (error) return { error: error.message };

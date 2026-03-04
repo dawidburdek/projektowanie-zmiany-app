@@ -7,6 +7,7 @@ export interface Project {
   name: string;
   status: ProjectStatus;
   owner_id: string;
+  visibility: "all" | "admin_only";
 }
 
 export interface Query {
@@ -15,7 +16,7 @@ export interface Query {
   project_id: string;
   name: string;
   description: string | null;
-  image_path: string | null;
+  image_paths: string[];
   status: QueryStatus;
   created_by: string;
 }
@@ -26,6 +27,6 @@ export interface Message {
   query_id: string;
   user_id: string;
   content: string | null;
-  image_path: string | null;
+  image_paths: string[];
   user_email: string;
 }

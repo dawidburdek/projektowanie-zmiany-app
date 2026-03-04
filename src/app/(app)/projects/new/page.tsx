@@ -1,8 +1,15 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
 import { ProjectForm } from "@/components/app/ProjectForm";
 
-export default function NewProjectPage() {
+const ADMIN_EMAILS = ["burdekd@gmail.com", "mbalak@tabell.eu"];
+
+export default async function NewProjectPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const isAdmin = ADMIN_EMAILS.includes(user?.email ?? "");
+
   return (
     <div className="p-6 max-w-md mx-auto">
       <Link
@@ -13,7 +20,7 @@ export default function NewProjectPage() {
         Powrót
       </Link>
       <h1 className="text-h4 font-semibold text-text-primary mb-6">Nowy projekt</h1>
-      <ProjectForm />
+      <ProjectForm isAdmin={isAdmin} />
     </div>
   );
 }

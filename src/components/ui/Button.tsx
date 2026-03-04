@@ -9,10 +9,10 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: "bg-accent-primary text-[#ffffff] hover:bg-accent-hover border border-transparent",
+  primary: "bg-accent-primary text-text-inverse hover:bg-accent-hover border border-transparent",
   secondary: "bg-bg-card text-text-primary hover:bg-bg-tertiary border border-border hover:border-border-hover",
   ghost: "bg-transparent text-text-secondary hover:bg-bg-secondary hover:text-text-primary border border-transparent",
-  danger: "bg-error text-[#ffffff] hover:opacity-90 border border-transparent",
+  danger: "bg-error text-text-inverse hover:opacity-90 border border-transparent",
   icon: "bg-transparent text-text-secondary hover:bg-bg-secondary hover:text-text-primary border border-transparent",
 };
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
 import { StatusBadge } from "./StatusBadge";
 import type { Project } from "@/lib/types";
 
@@ -13,7 +14,12 @@ export function ProjectCard({ project }: { project: Project }) {
             {new Date(project.created_at).toLocaleDateString("pl-PL")}
           </p>
         </div>
-        <StatusBadge status={project.status} />
+        <div className="flex items-center gap-2 shrink-0">
+          {project.visibility === "admin_only" && (
+            <Badge variant="outline">Tylko admini</Badge>
+          )}
+          <StatusBadge status={project.status} />
+        </div>
       </Card>
     </Link>
   );

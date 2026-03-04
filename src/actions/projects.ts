@@ -10,9 +10,11 @@ export async function createProject(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  const visibility = (formData.get("visibility") as string) || "all";
   const { error } = await supabase.from("projects").insert({
     name: formData.get("name") as string,
     owner_id: user.id,
+    visibility,
   });
 
   if (error) return { error: error.message };

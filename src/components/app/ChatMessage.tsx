@@ -18,9 +18,7 @@ interface Props {
 }
 
 export function ChatMessage({ message, isOwn }: Props) {
-  const imageUrl = message.image_path
-    ? getImageUrl("chat-images", message.image_path)
-    : null;
+  const imageUrls = (message.image_paths ?? []).map((p) => getImageUrl("chat-images", p));
 
   return (
     <div className={`flex flex-col gap-1 ${isOwn ? "items-end" : "items-start"}`}>
@@ -34,12 +32,16 @@ export function ChatMessage({ message, isOwn }: Props) {
             : "bg-bg-card border border-border text-text-primary"
         }`}
       >
-        {imageUrl && (
-          <div className="relative w-48 aspect-video mb-2 rounded-sm overflow-hidden">
-            <ImageLightbox src={imageUrl} alt="Zdjęcie" className="w-full h-full" />
+        {imageUrls.length > 0 && (
+          <div className={`grid gap-1 mb-2 ${imageUrls.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}>
+            {imageUrls.map((url, i) => (
+              <div key={i} className="relative w-full aspect-video rounded-sm overflow-hidden">
+                <ImageLightbox src={url} alt={`Zdjęcie ${i + 1}`} className="w-full h-full" />
+              </div>
+            ))}
           </div>
         )}
-        {message.content && <p>{message.content}</p>}
+        {message.content && <p className="whitespace-pre-wrap">{message.content}</p>}
       </div>
     </div>
   );

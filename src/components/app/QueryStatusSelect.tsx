@@ -16,6 +16,7 @@ export function QueryStatusSelect({ queryId, projectId, currentStatus }: Props) 
 
   return (
     <Select
+      containerClassName="w-fit"
       defaultValue={currentStatus}
       onChange={(e) => {
         const status = e.target.value as QueryStatus;

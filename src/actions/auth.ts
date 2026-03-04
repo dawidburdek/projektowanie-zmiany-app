@@ -19,8 +19,14 @@ export async function login(formData: FormData) {
 export async function signup(formData: FormData) {
   const supabase = await createClient();
 
+  const ALLOWED_EMAILS = ["mbalak@tabell.eu", "burdekd@gmail.com", "agata@tabell.eu"];
+  const email = formData.get("email") as string;
+  if (!ALLOWED_EMAILS.includes(email.toLowerCase())) {
+    return { error: "Ten adres email nie ma dostępu do aplikacji." };
+  }
+
   const { error } = await supabase.auth.signUp({
-    email: formData.get("email") as string,
+    email,
     password: formData.get("password") as string,
   });
 

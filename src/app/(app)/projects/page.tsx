@@ -4,12 +4,16 @@ import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/Button";
 import { ProjectCard } from "@/components/app/ProjectCard";
 
+const ADMIN_EMAILS = ["burdekd@gmail.com", "mbalak@tabell.eu"];
+
 export default async function ProjectsPage() {
   const supabase = await createClient();
-  const { data: projects } = await supabase
-    .from("projects")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const { data: { user } } = await supabase.auth.getUser();
+  const isAdmin = ADMIN_EMAILS.includes(user?.email ?? "");
+
+  let query = supabase.from("projects").select("*").order("created_at", { ascending: false });
+  if (!isAdmin) query = query.eq("visibility", "all");
+  const { data: projects } = await query;
 
   return (
     <div className="p-6 max-w-2xl mx-auto">

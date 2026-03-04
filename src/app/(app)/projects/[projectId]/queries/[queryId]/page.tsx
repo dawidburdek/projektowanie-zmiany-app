@@ -42,9 +42,7 @@ export default async function QueryDetailPage({ params }: Props) {
 
   if (!query) notFound();
 
-  const queryImageUrl = query.image_path
-    ? getImageUrl("query-images", query.image_path)
-    : null;
+  const queryImageUrls = (query.image_paths ?? []).map((p: string) => getImageUrl("query-images", p));
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
@@ -71,9 +69,13 @@ export default async function QueryDetailPage({ params }: Props) {
           />
         </div>
 
-        {queryImageUrl && (
-          <div className="relative w-full max-w-sm aspect-video mt-3 rounded-sm overflow-hidden border border-border">
-            <ImageLightbox src={queryImageUrl} alt={query.name} className="w-full h-full" />
+        {queryImageUrls.length > 0 && (
+          <div className={`grid gap-2 mt-3 ${queryImageUrls.length > 1 ? "grid-cols-2" : "grid-cols-1"} max-w-sm`}>
+            {queryImageUrls.map((url: string, i: number) => (
+              <div key={i} className="relative w-full aspect-video rounded-sm overflow-hidden border border-border">
+                <ImageLightbox src={url} alt={`${query.name} ${i + 1}`} className="w-full h-full" />
+              </div>
+            ))}
           </div>
         )}
 

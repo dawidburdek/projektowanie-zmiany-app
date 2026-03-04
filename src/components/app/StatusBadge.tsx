@@ -18,5 +18,5 @@ const labelMap: Record<Status, string> = {
 };
 
 export function StatusBadge({ status }: { status: Status }) {
-  return <Badge variant={variantMap[status]}>{labelMap[status]}</Badge>;
+  return <Badge variant={variantMap[status]} className="min-w-[6.5rem] justify-center">{labelMap[status]}</Badge>;
 }

@@ -7,14 +7,15 @@ import { cn } from "@/lib/utils";
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   error?: string;
+  containerClassName?: string;
 }
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, error, className, id, children, ...props }, ref) => {
+  ({ label, error, className, containerClassName, id, children, ...props }, ref) => {
     const inputId = id ?? label?.toLowerCase().replace(/\s+/g, "-");
 
     return (
-      <div className="w-full">
+      <div className={cn("w-full", containerClassName)}>
         {label && (
           <label
             htmlFor={inputId}

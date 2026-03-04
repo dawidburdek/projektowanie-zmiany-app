@@ -36,7 +36,7 @@ export function QueryForm({ projectId }: { projectId: string }) {
         <p className="text-small font-medium text-text-secondary mb-1.5">
           Zdjęcie (opcjonalne)
         </p>
-        <ImageUpload name="image" />
+        <ImageUpload name="image" multiple />
       </div>
       {state?.error && (
         <p className="text-caption text-error">{state.error}</p>
