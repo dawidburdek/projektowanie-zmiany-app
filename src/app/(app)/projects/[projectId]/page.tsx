@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/app/StatusBadge";
 import { QueryCard } from "@/components/app/QueryCard";
 import { ProjectStatusSelect } from "@/components/app/ProjectStatusSelect";
 import { deleteProject } from "@/actions/projects";
+import { DeleteConfirmButton } from "@/components/app/DeleteConfirmButton";
 
 interface Props {
   params: Promise<{ projectId: string }>;
@@ -86,17 +87,14 @@ export default async function ProjectDetailPage({ params }: Props) {
       )}
 
       <div className="mt-8 pt-6 border-t border-border">
-        <form
+        <DeleteConfirmButton
           action={async () => {
             "use server";
             await deleteProject(projectId);
           }}
-        >
-          <Button type="submit" variant="danger" size="sm">
-            <Trash2 size={14} />
-            Usuń projekt
-          </Button>
-        </form>
+          label="Usuń projekt"
+          description={`Czy na pewno chcesz usunąć projekt "${project.name}"? Ta operacja jest nieodwracalna i usunie wszystkie zapytania oraz wiadomości.`}
+        />
       </div>
     </div>
   );

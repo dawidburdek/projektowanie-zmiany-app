@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/app/StatusBadge";
@@ -8,6 +8,7 @@ import { QueryStatusSelect } from "@/components/app/QueryStatusSelect";
 import { ChatFeed } from "@/components/app/ChatFeed";
 import { ChatInput } from "@/components/app/ChatInput";
 import { ImageLightbox } from "@/components/app/ImageLightbox";
+import { DeleteConfirmButton } from "@/components/app/DeleteConfirmButton";
 import { deleteQuery } from "@/actions/queries";
 
 interface Props {
@@ -80,17 +81,14 @@ export default async function QueryDetailPage({ params }: Props) {
         )}
 
         <div className="mt-3 pt-3 border-t border-border">
-          <form
+          <DeleteConfirmButton
             action={async () => {
               "use server";
               await deleteQuery(queryId, projectId);
             }}
-          >
-            <Button type="submit" variant="ghost" size="sm">
-              <Trash2 size={12} />
-              Usuń zapytanie
-            </Button>
-          </form>
+            label="Usuń zapytanie"
+            description={`Czy na pewno chcesz usunąć zapytanie "${query.name}"? Ta operacja jest nieodwracalna i usunie wszystkie wiadomości.`}
+          />
         </div>
       </div>
 
