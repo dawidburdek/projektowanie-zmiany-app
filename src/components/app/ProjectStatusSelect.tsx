@@ -21,9 +21,9 @@ export function ProjectStatusSelect({ projectId, currentStatus }: Props) {
         startTransition(async () => { await updateProjectStatus(projectId, status); });
       }}
     >
-      <option value="New">New</option>
-      <option value="In Progress">In Progress</option>
-      <option value="Completed">Completed</option>
+      <option value="New">Nowe</option>
+      <option value="In Progress">W toku</option>
+      <option value="Completed">Zakończone</option>
     </Select>
   );
 }

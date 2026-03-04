@@ -10,6 +10,13 @@ const variantMap: Record<Status, "default" | "warning" | "success"> = {
   Resolved: "success",
 };
 
+const labelMap: Record<Status, string> = {
+  New: "Nowe",
+  "In Progress": "W toku",
+  Completed: "Zakończone",
+  Resolved: "Rozwiązane",
+};
+
 export function StatusBadge({ status }: { status: Status }) {
-  return <Badge variant={variantMap[status]}>{status}</Badge>;
+  return <Badge variant={variantMap[status]}>{labelMap[status]}</Badge>;
 }

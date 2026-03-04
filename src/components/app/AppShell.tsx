@@ -32,7 +32,7 @@ export function AppShell({ children, userEmail }: AppShellProps) {
           items={navItems}
           logo={
             <span className="text-small font-semibold text-text-primary px-1">
-              Design Mgmt
+              Design MGMT
             </span>
           }
           className="flex-1"

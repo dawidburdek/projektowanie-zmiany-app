@@ -22,9 +22,9 @@ export function QueryStatusSelect({ queryId, projectId, currentStatus }: Props) 
         startTransition(async () => { await updateQueryStatus(queryId, projectId, status); });
       }}
     >
-      <option value="New">New</option>
-      <option value="In Progress">In Progress</option>
-      <option value="Resolved">Resolved</option>
+      <option value="New">Nowe</option>
+      <option value="In Progress">W toku</option>
+      <option value="Resolved">Rozwiązane</option>
     </Select>
   );
 }

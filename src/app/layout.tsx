@@ -8,8 +8,8 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Design System",
-  description: "Space Grotesk · Minimal · Electric Blue",
+  title: "Design MGMT",
+  description: "Aplikacja do zarządzania zapytaniami projektowymi",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
