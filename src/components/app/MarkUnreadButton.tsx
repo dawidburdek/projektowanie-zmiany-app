@@ -1,10 +1,8 @@
 "use client";
 
-import { useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { markQueryAsUnread } from "@/actions/queries";
+import { useManualUnread } from "./ManualUnreadContext";
 
 interface Props {
   queryId: string;
@@ -12,20 +10,17 @@ interface Props {
 }
 
 export function MarkUnreadButton({ queryId, projectId }: Props) {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const { add } = useManualUnread();
 
   return (
     <Button
       variant="secondary"
       size="sm"
       title="Oznacz jako nieprzeczytane"
-      disabled={isPending}
-      onClick={async (e) => {
+      onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        await markQueryAsUnread(queryId, projectId);
-        startTransition(() => router.refresh());
+        add(queryId, projectId);
       }}
     >
       <MessageSquare size={14} />

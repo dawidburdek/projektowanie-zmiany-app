@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { StatusBadge } from "./StatusBadge";
+import { ManualUnreadProjectDot } from "./ManualUnreadContext";
 import type { Project } from "@/lib/types";
 
 interface Props {
@@ -12,11 +13,12 @@ interface Props {
 export function ProjectCard({ project, hasUnread }: Props) {
   return (
     <Link href={`/projects/${project.id}`}>
-      <Card hover className="flex items-center justify-between gap-4">
+      <Card hover className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2 min-w-0">
           {hasUnread && (
             <span className="shrink-0 w-2 h-2 rounded-full bg-success" title="Nieprzeczytane wiadomości" />
           )}
+          <ManualUnreadProjectDot projectId={project.id} />
           <div className="min-w-0">
             <p className="text-small font-medium text-text-primary truncate">{project.name}</p>
             <p className="text-caption text-text-muted mt-0.5">
@@ -24,7 +26,7 @@ export function ProjectCard({ project, hasUnread }: Props) {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2">
           {project.visibility === "admin_only" && (
             <Badge variant="outline">Tylko admini</Badge>
           )}

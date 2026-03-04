@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { StatusBadge } from "./StatusBadge";
 import { MarkUnreadButton } from "./MarkUnreadButton";
+import { ManualUnreadQueryDot } from "./ManualUnreadContext";
 import type { Query } from "@/lib/types";
 
 interface Props {
@@ -21,6 +22,7 @@ export function QueryCard({ query, projectId, hasActivity }: Props) {
         {hasActivity && (
           <span className="shrink-0 w-2 h-2 rounded-full bg-success" title="Nowa aktywność" />
         )}
+        <ManualUnreadQueryDot queryId={query.id} />
         <div className="min-w-0">
           <p className="text-small font-medium text-text-primary truncate">{query.name}</p>
           {query.description && (

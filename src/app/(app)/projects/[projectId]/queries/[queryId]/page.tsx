@@ -72,7 +72,7 @@ export default async function QueryDetailPage({ params }: Props) {
         </div>
 
         {queryImageUrls.length > 0 && (
-          <div className={`grid gap-2 mt-3 ${queryImageUrls.length > 1 ? "grid-cols-2" : "grid-cols-1"} max-w-sm`}>
+          <div className={`grid gap-2 mt-3 ${queryImageUrls.length > 1 ? "grid-cols-2" : "grid-cols-1"} max-w-[192px] sm:max-w-sm`}>
             {queryImageUrls.map((url: string, i: number) => (
               <div key={i} className="relative w-full aspect-video rounded-sm overflow-hidden border border-border">
                 <ImageLightbox src={url} alt={`${query.name} ${i + 1}`} className="w-full h-full" />
