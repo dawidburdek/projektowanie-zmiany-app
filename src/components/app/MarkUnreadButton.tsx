@@ -1,7 +1,9 @@
 "use client";
 
+import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { MessageSquare } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { markQueryAsUnread } from "@/actions/queries";
 
 interface Props {
@@ -11,20 +13,22 @@ interface Props {
 
 export function MarkUnreadButton({ queryId, projectId }: Props) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="secondary"
+      size="sm"
       title="Oznacz jako nieprzeczytane"
+      disabled={isPending}
       onClick={async (e) => {
         e.preventDefault();
         e.stopPropagation();
         await markQueryAsUnread(queryId, projectId);
-        router.refresh();
+        startTransition(() => router.refresh());
       }}
-      className="shrink-0 p-1 rounded-sm text-text-muted hover:text-text-primary hover:bg-bg-tertiary transition-colors"
     >
       <MessageSquare size={14} />
-    </button>
+    </Button>
   );
 }
