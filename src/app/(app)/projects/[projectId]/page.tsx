@@ -17,24 +17,39 @@ export default async function ProjectDetailPage({ params }: Props) {
   const { projectId } = await params;
   const supabase = await createClient();
 
-  const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-
-  const [{ data: project }, { data: queries }, { data: recentMessages }] = await Promise.all([
+  const [{ data: project }, { data: queries }, { data: { user } }] = await Promise.all([
     supabase.from("projects").select("*").eq("id", projectId).single(),
-    supabase
-      .from("queries")
-      .select("*")
-      .eq("project_id", projectId)
-      .order("created_at", { ascending: false }),
-    supabase
-      .from("messages")
-      .select("query_id")
-      .gte("created_at", since24h),
+    supabase.from("queries").select("*").eq("project_id", projectId).order("created_at", { ascending: false }),
+    supabase.auth.getUser(),
   ]);
 
   if (!project) notFound();
 
-  const activeQueryIds = new Set((recentMessages ?? []).map((m) => m.query_id));
+  const queryIds = (queries ?? []).map((q) => q.id);
+
+  const [{ data: messages }, { data: reads }] = await Promise.all([
+    queryIds.length > 0
+      ? supabase.from("messages").select("query_id, created_at").in("query_id", queryIds)
+      : Promise.resolve({ data: [] as { query_id: string; created_at: string }[] }),
+    queryIds.length > 0 && user
+      ? supabase.from("query_reads").select("query_id, last_read_at").eq("user_id", user.id).in("query_id", queryIds)
+      : Promise.resolve({ data: [] as { query_id: string; last_read_at: string }[] }),
+  ]);
+
+  const readMap = new Map((reads ?? []).map((r) => [r.query_id, r.last_read_at]));
+  const latestMessageMap = new Map<string, string>();
+  for (const msg of messages ?? []) {
+    const current = latestMessageMap.get(msg.query_id);
+    if (!current || msg.created_at > current) latestMessageMap.set(msg.query_id, msg.created_at);
+  }
+  const unreadQueryIds = new Set(
+    [...latestMessageMap.entries()]
+      .filter(([qId, latestAt]) => {
+        const lastRead = readMap.get(qId);
+        return !lastRead || latestAt > lastRead;
+      })
+      .map(([qId]) => qId)
+  );
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
@@ -48,7 +63,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
       <div className="mb-6">
         <StatusBadge status={project.status} />
-        <h1 className="text-h4 font-semibold text-text-primary truncate mt-2">{project.name}</h1>
+        <h1 className="text-h4 font-semibold text-text-primary truncate mt-3">{project.name}</h1>
         <p className="text-caption text-text-muted mt-0.5">
           {new Date(project.created_at).toLocaleDateString("pl-PL")}
         </p>
@@ -74,7 +89,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               key={query.id}
               query={query}
               projectId={projectId}
-              hasActivity={activeQueryIds.has(query.id)}
+              hasActivity={unreadQueryIds.has(query.id)}
             />
           ))}
         </div>

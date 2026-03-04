@@ -66,6 +66,17 @@ export async function deleteQuery(queryId: string, projectId: string) {
   redirect(`/projects/${projectId}`);
 }
 
+export async function markQueryAsRead(queryId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  await supabase.from("query_reads").upsert(
+    { user_id: user.id, query_id: queryId, last_read_at: new Date().toISOString() },
+    { onConflict: "user_id,query_id" }
+  );
+}
+
 export async function sendMessage(queryId: string, projectId: string, formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

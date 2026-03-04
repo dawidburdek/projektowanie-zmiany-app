@@ -89,7 +89,7 @@ export function ChatInput({ queryId, projectId }: ChatInputProps) {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Wpisz wiadomość..."
-          rows={1}
+          rows={2}
           className="flex-1 bg-bg-primary border border-border rounded-sm text-small text-text-primary
             placeholder:text-text-muted px-3 py-2 resize-none
             focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary/20

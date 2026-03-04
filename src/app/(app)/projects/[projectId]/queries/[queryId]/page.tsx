@@ -9,6 +9,7 @@ import { ChatFeed } from "@/components/app/ChatFeed";
 import { ChatInput } from "@/components/app/ChatInput";
 import { ImageLightbox } from "@/components/app/ImageLightbox";
 import { DeleteConfirmButton } from "@/components/app/DeleteConfirmButton";
+import { MarkQueryRead } from "@/components/app/MarkQueryRead";
 import { deleteQuery } from "@/actions/queries";
 
 interface Props {
@@ -58,7 +59,7 @@ export default async function QueryDetailPage({ params }: Props) {
         </Link>
 
         <StatusBadge status={query.status} />
-        <h1 className="text-h5 font-semibold text-text-primary truncate mt-2">{query.name}</h1>
+        <h1 className="text-h5 font-semibold text-text-primary truncate mt-3">{query.name}</h1>
         {query.description && (
           <p className="text-small text-text-secondary mt-1">{query.description}</p>
         )}
@@ -96,6 +97,7 @@ export default async function QueryDetailPage({ params }: Props) {
       />
 
       <ChatInput queryId={queryId} projectId={projectId} />
+      <MarkQueryRead queryId={queryId} />
     </div>
   );
 }
