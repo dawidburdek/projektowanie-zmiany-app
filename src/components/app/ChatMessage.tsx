@@ -1,6 +1,5 @@
-import Image from "next/image";
-import { createClient } from "@/lib/supabase/server";
 import type { Message } from "@/lib/types";
+import { ImageLightbox } from "./ImageLightbox";
 
 function formatTime(iso: string) {
   return new Date(iso).toLocaleTimeString("pl-PL", {
@@ -13,12 +12,12 @@ function getImageUrl(bucket: string, path: string) {
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
 }
 
-interface ChatMessageClientProps {
+interface Props {
   message: Message;
   isOwn: boolean;
 }
 
-export function ChatMessage({ message, isOwn }: ChatMessageClientProps) {
+export function ChatMessage({ message, isOwn }: Props) {
   const imageUrl = message.image_path
     ? getImageUrl("chat-images", message.image_path)
     : null;
@@ -31,13 +30,13 @@ export function ChatMessage({ message, isOwn }: ChatMessageClientProps) {
       <div
         className={`max-w-xs rounded-sm px-3 py-2 text-small ${
           isOwn
-            ? "bg-accent-primary text-text-inverse"
+            ? "bg-accent-primary text-white"
             : "bg-bg-card border border-border text-text-primary"
         }`}
       >
         {imageUrl && (
           <div className="relative w-48 aspect-video mb-2 rounded-sm overflow-hidden">
-            <Image src={imageUrl} alt="Zdjęcie" fill className="object-cover" />
+            <ImageLightbox src={imageUrl} alt="Zdjęcie" className="w-full h-full" />
           </div>
         )}
         {message.content && <p>{message.content}</p>}

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Trash2 } from "lucide-react";
@@ -8,6 +7,7 @@ import { StatusBadge } from "@/components/app/StatusBadge";
 import { QueryStatusSelect } from "@/components/app/QueryStatusSelect";
 import { ChatFeed } from "@/components/app/ChatFeed";
 import { ChatInput } from "@/components/app/ChatInput";
+import { ImageLightbox } from "@/components/app/ImageLightbox";
 import { deleteQuery } from "@/actions/queries";
 
 interface Props {
@@ -75,7 +75,7 @@ export default async function QueryDetailPage({ params }: Props) {
 
         {queryImageUrl && (
           <div className="relative w-full max-w-sm aspect-video mt-3 rounded-sm overflow-hidden border border-border">
-            <Image src={queryImageUrl} alt={query.name} fill className="object-cover" />
+            <ImageLightbox src={queryImageUrl} alt={query.name} className="w-full h-full" />
           </div>
         )}
 
