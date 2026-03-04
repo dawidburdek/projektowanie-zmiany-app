@@ -57,18 +57,18 @@ export default async function QueryDetailPage({ params }: Props) {
           {project?.name ?? "Projekt"}
         </Link>
 
-        <div className="flex items-center gap-2 mb-2">
-          <StatusBadge status={query.status} />
+        <StatusBadge status={query.status} />
+        <h1 className="text-h5 font-semibold text-text-primary truncate mt-2">{query.name}</h1>
+        {query.description && (
+          <p className="text-small text-text-secondary mt-1">{query.description}</p>
+        )}
+        <div className="mt-3">
           <QueryStatusSelect
             queryId={queryId}
             projectId={projectId}
             currentStatus={query.status}
           />
         </div>
-        <h1 className="text-h5 font-semibold text-text-primary truncate">{query.name}</h1>
-        {query.description && (
-          <p className="text-small text-text-secondary mt-1">{query.description}</p>
-        )}
 
         {queryImageUrl && (
           <div className="relative w-full max-w-sm aspect-video mt-3 rounded-sm overflow-hidden border border-border">
