@@ -16,16 +16,24 @@ export default async function ProjectDetailPage({ params }: Props) {
   const { projectId } = await params;
   const supabase = await createClient();
 
-  const [{ data: project }, { data: queries }] = await Promise.all([
+  const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+  const [{ data: project }, { data: queries }, { data: recentMessages }] = await Promise.all([
     supabase.from("projects").select("*").eq("id", projectId).single(),
     supabase
       .from("queries")
       .select("*")
       .eq("project_id", projectId)
       .order("created_at", { ascending: false }),
+    supabase
+      .from("messages")
+      .select("query_id")
+      .gte("created_at", since24h),
   ]);
 
   if (!project) notFound();
+
+  const activeQueryIds = new Set((recentMessages ?? []).map((m) => m.query_id));
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
@@ -63,7 +71,12 @@ export default async function ProjectDetailPage({ params }: Props) {
       {queries && queries.length > 0 ? (
         <div className="flex flex-col gap-3">
           {queries.map((query) => (
-            <QueryCard key={query.id} query={query} projectId={projectId} />
+            <QueryCard
+              key={query.id}
+              query={query}
+              projectId={projectId}
+              hasActivity={activeQueryIds.has(query.id)}
+            />
           ))}
         </div>
       ) : (
