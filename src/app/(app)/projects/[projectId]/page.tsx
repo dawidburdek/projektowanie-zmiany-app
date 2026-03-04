@@ -46,17 +46,15 @@ export default async function ProjectDetailPage({ params }: Props) {
         Projekty
       </Link>
 
-      <div className="flex items-start justify-between gap-4 mb-6">
-        <div className="min-w-0">
-          <h1 className="text-h4 font-semibold text-text-primary truncate">{project.name}</h1>
-          <p className="text-caption text-text-muted mt-0.5">
-            {new Date(project.created_at).toLocaleDateString("pl-PL")}
-          </p>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-2">
           <StatusBadge status={project.status} />
           <ProjectStatusSelect projectId={projectId} currentStatus={project.status} />
         </div>
+        <h1 className="text-h4 font-semibold text-text-primary truncate">{project.name}</h1>
+        <p className="text-caption text-text-muted mt-0.5">
+          {new Date(project.created_at).toLocaleDateString("pl-PL")}
+        </p>
       </div>
 
       <div className="flex items-center justify-between mb-4">
