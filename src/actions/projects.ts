@@ -21,6 +21,21 @@ export async function createProject(formData: FormData) {
   redirect("/projects");
 }
 
+export async function updateProject(projectId: string, formData: FormData) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("projects")
+    .update({ name: formData.get("name") as string })
+    .eq("id", projectId);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/projects");
+  revalidatePath(`/projects/${projectId}`);
+  redirect(`/projects/${projectId}`);
+}
+
 export async function updateProjectStatus(projectId: string, status: ProjectStatus) {
   const supabase = await createClient();
 

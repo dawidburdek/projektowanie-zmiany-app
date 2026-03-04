@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Plus, Pencil } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/app/StatusBadge";
@@ -67,8 +67,14 @@ export default async function ProjectDetailPage({ params }: Props) {
         <p className="text-caption text-text-muted mt-0.5">
           {new Date(project.created_at).toLocaleDateString("pl-PL")}
         </p>
-        <div className="mt-3">
+        <div className="mt-3 flex items-center gap-2">
           <ProjectStatusSelect projectId={projectId} currentStatus={project.status} />
+          <Link href={`/projects/${projectId}/edit`}>
+            <Button variant="ghost" size="sm">
+              <Pencil size={13} />
+              Edytuj
+            </Button>
+          </Link>
         </div>
       </div>
 

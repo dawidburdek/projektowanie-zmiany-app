@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Pencil } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/app/StatusBadge";
@@ -77,7 +77,13 @@ export default async function QueryDetailPage({ params }: Props) {
           </div>
         )}
 
-        <div className="mt-3 pt-3 border-t border-border">
+        <div className="mt-3 pt-3 border-t border-border flex items-center gap-2">
+          <Link href={`/projects/${projectId}/queries/${queryId}/edit`}>
+            <Button variant="ghost" size="sm">
+              <Pencil size={13} />
+              Edytuj
+            </Button>
+          </Link>
           <DeleteConfirmButton
             action={async () => {
               "use server";

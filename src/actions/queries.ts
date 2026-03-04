@@ -38,6 +38,24 @@ export async function createQuery(projectId: string, formData: FormData) {
   redirect(`/projects/${projectId}`);
 }
 
+export async function updateQuery(queryId: string, projectId: string, formData: FormData) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("queries")
+    .update({
+      name: formData.get("name") as string,
+      description: (formData.get("description") as string) || null,
+    })
+    .eq("id", queryId);
+
+  if (error) return { error: error.message };
+
+  revalidatePath(`/projects/${projectId}`);
+  revalidatePath(`/projects/${projectId}/queries/${queryId}`);
+  redirect(`/projects/${projectId}/queries/${queryId}`);
+}
+
 export async function updateQueryStatus(queryId: string, projectId: string, status: QueryStatus) {
   const supabase = await createClient();
 
