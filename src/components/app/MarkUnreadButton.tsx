@@ -1,6 +1,7 @@
 "use client";
 
-import { BellOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { MessageSquare } from "lucide-react";
 import { markQueryAsUnread } from "@/actions/queries";
 
 interface Props {
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export function MarkUnreadButton({ queryId, projectId }: Props) {
+  const router = useRouter();
+
   return (
     <button
       type="button"
@@ -17,10 +20,11 @@ export function MarkUnreadButton({ queryId, projectId }: Props) {
         e.preventDefault();
         e.stopPropagation();
         await markQueryAsUnread(queryId, projectId);
+        router.refresh();
       }}
       className="shrink-0 p-1 rounded-sm text-text-muted hover:text-text-primary hover:bg-bg-tertiary transition-colors"
     >
-      <BellOff size={14} />
+      <MessageSquare size={14} />
     </button>
   );
 }

@@ -28,11 +28,16 @@ const iconSizeStyles: Record<ButtonSize, string> = {
   lg: "h-11 w-11",
 };
 
-function Button({ variant = "primary", size = "md", className, children, ...props }: ButtonProps) {
+function Button({ variant = "primary", size = "md", className, style, children, ...props }: ButtonProps) {
   const sizeClass = variant === "icon" ? iconSizeStyles[size] : sizeStyles[size];
+  const inlineStyle: React.CSSProperties =
+    variant === "primary" || variant === "danger"
+      ? { color: "white", ...style }
+      : style ?? {};
 
   return (
     <button
+      style={inlineStyle}
       className={cn(
         "inline-flex items-center justify-center gap-2 font-medium rounded-sm cursor-pointer",
         "transition-colors duration-150",

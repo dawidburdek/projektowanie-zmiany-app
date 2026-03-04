@@ -26,7 +26,7 @@ export function ChatMessage({ message, isOwn }: Props) {
         {isOwn ? "Ty" : message.user_email} · {formatTime(message.created_at)}
       </span>
       <div
-        className={`max-w-xs rounded-sm px-3 py-2 text-small ${
+        className={`max-w-xs min-w-[16rem] rounded-sm px-3 py-2 text-small ${
           isOwn
             ? "bg-accent-primary text-white"
             : "bg-bg-card border border-border text-text-primary"
