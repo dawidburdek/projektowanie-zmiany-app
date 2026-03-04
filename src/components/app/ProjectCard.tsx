@@ -1,0 +1,20 @@
+import Link from "next/link";
+import { Card } from "@/components/ui/Card";
+import { StatusBadge } from "./StatusBadge";
+import type { Project } from "@/lib/types";
+
+export function ProjectCard({ project }: { project: Project }) {
+  return (
+    <Link href={`/projects/${project.id}`}>
+      <Card hover className="flex items-center justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-small font-medium text-text-primary truncate">{project.name}</p>
+          <p className="text-caption text-text-muted mt-0.5">
+            {new Date(project.created_at).toLocaleDateString("pl-PL")}
+          </p>
+        </div>
+        <StatusBadge status={project.status} />
+      </Card>
+    </Link>
+  );
+}

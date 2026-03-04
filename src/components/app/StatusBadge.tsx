@@ -1,0 +1,15 @@
+import { Badge } from "@/components/ui/Badge";
+import type { ProjectStatus, QueryStatus } from "@/lib/types";
+
+type Status = ProjectStatus | QueryStatus;
+
+const variantMap: Record<Status, "default" | "warning" | "success"> = {
+  New: "default",
+  "In Progress": "warning",
+  Completed: "success",
+  Resolved: "success",
+};
+
+export function StatusBadge({ status }: { status: Status }) {
+  return <Badge variant={variantMap[status]}>{status}</Badge>;
+}
