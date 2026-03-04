@@ -4,6 +4,8 @@ import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { QueryEditForm } from "@/components/app/QueryEditForm";
 
+const ADMIN_EMAILS = ["burdekd@gmail.com", "mbalak@tabell.eu"];
+
 interface Props {
   params: Promise<{ projectId: string; queryId: string }>;
 }
@@ -12,13 +14,14 @@ export default async function EditQueryPage({ params }: Props) {
   const { projectId, queryId } = await params;
   const supabase = await createClient();
 
-  const { data: query } = await supabase
-    .from("queries")
-    .select("*")
-    .eq("id", queryId)
-    .single();
+  const [{ data: query }, { data: { user } }] = await Promise.all([
+    supabase.from("queries").select("*").eq("id", queryId).single(),
+    supabase.auth.getUser(),
+  ]);
 
   if (!query) notFound();
+
+  const isAdmin = ADMIN_EMAILS.includes(user?.email ?? "");
 
   return (
     <div className="p-6 max-w-md mx-auto">
@@ -35,6 +38,8 @@ export default async function EditQueryPage({ params }: Props) {
         projectId={projectId}
         defaultName={query.name}
         defaultDescription={query.description}
+        defaultVisibility={query.visibility ?? "all"}
+        isAdmin={isAdmin}
       />
     </div>
   );

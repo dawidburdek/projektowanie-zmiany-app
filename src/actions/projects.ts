@@ -26,9 +26,10 @@ export async function createProject(formData: FormData) {
 export async function updateProject(projectId: string, formData: FormData) {
   const supabase = await createClient();
 
+  const visibility = (formData.get("visibility") as string) || "all";
   const { error } = await supabase
     .from("projects")
-    .update({ name: formData.get("name") as string })
+    .update({ name: formData.get("name") as string, visibility })
     .eq("id", projectId);
 
   if (error) return { error: error.message };

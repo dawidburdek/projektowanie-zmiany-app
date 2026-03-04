@@ -9,6 +9,8 @@ import { ProjectStatusSelect } from "@/components/app/ProjectStatusSelect";
 import { deleteProject } from "@/actions/projects";
 import { DeleteConfirmButton } from "@/components/app/DeleteConfirmButton";
 
+const ADMIN_EMAILS = ["burdekd@gmail.com", "mbalak@tabell.eu"];
+
 interface Props {
   params: Promise<{ projectId: string }>;
 }
@@ -17,13 +19,17 @@ export default async function ProjectDetailPage({ params }: Props) {
   const { projectId } = await params;
   const supabase = await createClient();
 
-  const [{ data: project }, { data: queries }, { data: { user } }] = await Promise.all([
+  const [{ data: project }, { data: { user } }] = await Promise.all([
     supabase.from("projects").select("*").eq("id", projectId).single(),
-    supabase.from("queries").select("*").eq("project_id", projectId).order("created_at", { ascending: false }),
     supabase.auth.getUser(),
   ]);
 
   if (!project) notFound();
+
+  const isAdmin = ADMIN_EMAILS.includes(user?.email ?? "");
+  let queriesQuery = supabase.from("queries").select("*").eq("project_id", projectId).order("created_at", { ascending: false });
+  if (!isAdmin) queriesQuery = queriesQuery.eq("visibility", "all");
+  const { data: queries } = await queriesQuery;
 
   const queryIds = (queries ?? []).map((q) => q.id);
 
@@ -62,8 +68,10 @@ export default async function ProjectDetailPage({ params }: Props) {
       </Link>
 
       <div className="mb-6">
-        <StatusBadge status={project.status} />
-        <h1 className="text-h4 font-semibold text-text-primary truncate mt-3">{project.name}</h1>
+        <div className="flex items-center gap-3">
+          <StatusBadge status={project.status} />
+          <h1 className="text-h4 font-semibold text-text-primary truncate">{project.name}</h1>
+        </div>
         <p className="text-caption text-text-muted mt-0.5">
           {new Date(project.created_at).toLocaleDateString("pl-PL")}
         </p>

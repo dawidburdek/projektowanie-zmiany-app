@@ -25,12 +25,14 @@ export async function createQuery(projectId: string, formData: FormData) {
     i++;
   }
 
+  const visibility = (formData.get("visibility") as string) || "all";
   const { error } = await supabase.from("queries").insert({
     project_id: projectId,
     name: formData.get("name") as string,
     description: (formData.get("description") as string) || null,
     image_paths: imagePaths,
     created_by: user.id,
+    visibility,
   });
 
   if (error) return { error: error.message };
@@ -42,11 +44,13 @@ export async function createQuery(projectId: string, formData: FormData) {
 export async function updateQuery(queryId: string, projectId: string, formData: FormData) {
   const supabase = await createClient();
 
+  const visibility = (formData.get("visibility") as string) || "all";
   const { error } = await supabase
     .from("queries")
     .update({
       name: formData.get("name") as string,
       description: (formData.get("description") as string) || null,
+      visibility,
     })
     .eq("id", queryId);
 
@@ -83,6 +87,18 @@ export async function deleteQuery(queryId: string, projectId: string) {
 
   revalidatePath(`/projects/${projectId}`);
   redirect(`/projects/${projectId}`);
+}
+
+export async function markQueryAsUnread(queryId: string, projectId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  await supabase.from("query_reads").delete()
+    .eq("user_id", user.id)
+    .eq("query_id", queryId);
+
+  revalidatePath(`/projects/${projectId}`);
 }
 
 export async function markQueryAsRead(queryId: string) {

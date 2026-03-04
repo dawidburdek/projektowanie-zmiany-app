@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
 import { StatusBadge } from "./StatusBadge";
+import { MarkUnreadButton } from "./MarkUnreadButton";
 import type { Query } from "@/lib/types";
 
 interface Props {
@@ -24,7 +26,13 @@ export function QueryCard({ query, projectId, hasActivity }: Props) {
             )}
           </div>
         </div>
-        <StatusBadge status={query.status} />
+        <div className="flex items-center gap-2 shrink-0">
+          {query.visibility === "admin_only" && (
+            <Badge variant="outline">Tylko admini</Badge>
+          )}
+          <MarkUnreadButton queryId={query.id} projectId={projectId} />
+          <StatusBadge status={query.status} />
+        </div>
       </Card>
     </Link>
   );

@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { Select } from "@/components/ui/Select";
 import { updateProject } from "@/actions/projects";
 
 const initialState = { error: undefined as string | undefined };
@@ -10,9 +11,11 @@ const initialState = { error: undefined as string | undefined };
 interface Props {
   projectId: string;
   defaultName: string;
+  defaultVisibility?: string;
+  isAdmin?: boolean;
 }
 
-export function ProjectEditForm({ projectId, defaultName }: Props) {
+export function ProjectEditForm({ projectId, defaultName, defaultVisibility = "all", isAdmin }: Props) {
   const [state, action, pending] = useActionState(
     async (_prev: typeof initialState, formData: FormData) => {
       const result = await updateProject(projectId, formData);
@@ -29,6 +32,14 @@ export function ProjectEditForm({ projectId, defaultName }: Props) {
         defaultValue={defaultName}
         required
       />
+      {isAdmin ? (
+        <Select name="visibility" label="Widoczność" defaultValue={defaultVisibility}>
+          <option value="all">Dla wszystkich</option>
+          <option value="admin_only">Tylko admini</option>
+        </Select>
+      ) : (
+        <input type="hidden" name="visibility" value={defaultVisibility} />
+      )}
       {state?.error && (
         <p className="text-caption text-error">{state.error}</p>
       )}

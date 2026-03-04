@@ -19,6 +19,7 @@ export interface Query {
   image_paths: string[];
   status: QueryStatus;
   created_by: string;
+  visibility: "all" | "admin_only";
 }
 
 export interface Message {
